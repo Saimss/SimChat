@@ -1,0 +1,74 @@
+import {useState} from 'react'
+import {extractParticipants, extractMessages} from './Processing'
+import type {Participants, Messages} from './Processing'
+
+
+export interface ChatData{
+    messages: unknown[]
+    [key:string]: unknown
+    participants: unknown[]
+}
+
+interface JsonUploaderProps{
+    data: ChatData|null;
+    setData: (data: ChatData | null) => void;
+    participants: Participants[]|null;
+    setParticipants: (participants: Participants[] | null) => void;
+    messages: Messages[]|null
+    setMessages: (messages: Messages[] | null) => void;
+    error: string | null;
+    setError: (error: string | null)=> void;
+}
+
+export default function JsonUploader(
+    {
+        data,
+        setData,
+        participants,
+        setParticipants,
+        messages,
+        setMessages,
+        error,
+        setError,
+    }: JsonUploaderProps
+){
+
+    
+
+    const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0]
+        if (!file) return
+
+        
+
+        try{
+            const text = await file.text()
+            const parsed = JSON.parse(text) as ChatData
+            setData(parsed)
+            setParticipants(extractParticipants(parsed))
+            setMessages(extractMessages(parsed))
+            setError(null)
+        } catch (err) {
+
+            setError('Could not parse file as JSON')
+            setData(null)
+            setParticipants(null)
+            setMessages(null)
+        }
+    }
+
+    return(
+        <div className='p-6 bg-stone-900 min-h-screen flex flex-col items-center justify-center'>
+            {!data &&(
+                <div className='bg-stone-800 p-50 border-dotted border-2 border-stone-700 rounded-md w-full max-w-lg items-center flex flex-col'>
+                    <input type = 'file' accept='.json,application/json' onChange={handleFileChange} className=' file:bg-stone-800 file:text-amber-200 file:border-0 file:px-4 file:py-2 file:mr-4 hover:file:bg-stone-700 transition-colors'/>
+
+                    {error && (
+                        <p className = 'text-sm text-red-400 mt-2'> {error} </p>
+                    )}
+                </div>
+            )}
+
+        </div>
+    )
+}
