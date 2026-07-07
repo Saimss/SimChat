@@ -5,9 +5,10 @@ interface SidebarProps {
     chats: Chat[];
     selectedChatId: number | null;
     onSelectChat: (chatId: number) => void;
+    name: string;
 }
 
-export default function Sidebar({ chats, selectedChatId, onSelectChat }: SidebarProps) {
+export default function Sidebar({ chats, selectedChatId, onSelectChat, name }: SidebarProps) {
 
     return (
 
@@ -46,7 +47,7 @@ export default function Sidebar({ chats, selectedChatId, onSelectChat }: Sidebar
               )}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-semibold text-white/90 truncate">{chat.name}</p>
+              <p className="text-sm font-semibold text-white/90 truncate">{name}</p>
               <p className="text-xs text-white/40 truncate mt-0.5">{chat.preview}</p>
             </div>
           </button>

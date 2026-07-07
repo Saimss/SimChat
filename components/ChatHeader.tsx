@@ -3,9 +3,11 @@ import type {Chat} from '../types'
 
 interface ChatHeaderProps { 
     chat: Chat;
+    name: string;
 }
 
-export default function ChatHeader({ chat }: ChatHeaderProps) {
+
+export default function ChatHeader({ chat, name }: ChatHeaderProps) {
     return(
         <header className = 'flex items-center justify-between px-6 py-3.5 border-b border-white/5 flex-shrink-0 bg-[#1a1a1a]'>
             <div className = 'flex items-center gap-4'>
@@ -20,7 +22,7 @@ export default function ChatHeader({ chat }: ChatHeaderProps) {
                 </div>
 
                 <div>
-                    <p className = 'font-semibold text-white/90 text-sm leading-tight'>{chat.name}</p>
+                    <p className = 'font-semibold text-white/90 text-sm leading-tight'>{name}</p>
                     <p className = 'text-xs text-white/40 leading-tight mt-0.5'>{chat.online ? 'Online' : 'Offline'}</p>
                 </div>
             </div>  

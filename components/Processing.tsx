@@ -11,6 +11,14 @@ export interface Messages{
    
 }
 
+function decodeContent(str: string): string {
+    try {
+        return decodeURIComponent(str);
+    } catch {
+        return str;
+    }
+}
+
 export function extractParticipants(raw: ChatData): Participants[]{
     return raw.participants.map((item) => {
         const participant = item as Record<string, unknown>
@@ -25,9 +33,9 @@ export function extractMessages(raw: ChatData): Messages[]{
         const msg = item as Record<string, unknown>
         return{
             sender: String(msg.sender_name ?? 'unknown'),
-            content: String(msg.content ?? ''),
+            content: decodeContent(String(msg.content ?? '')),
             timestamp: Number(msg.timestamp?? 0)
 
         }
-    })
+    }).reverse()
 }

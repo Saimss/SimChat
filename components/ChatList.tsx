@@ -1,16 +1,25 @@
-import type {Message} from '../types';
+import type {Messages} from './Processing';
 import ChatBubble from './ChatBubble';
+import { useEffect, useRef } from 'react';
 
 interface ChatMessagesProps {
-    messages: Message[];
+    messages: Messages[];
 }
 
+
 export default function ChatMessages({ messages }: ChatMessagesProps) {
+    const bottomRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        bottomRef.current?.scrollIntoView({ behavior: 'instant' });
+    }, [messages]);
+
     return (
-        <div className="flex flex-col space-y-2 p-4">
-            {messages.map((message) => (
-                <ChatBubble key={message.id} message={message} />
+        <div className="flex flex-col space-y-2 p-4 overflow-y-auto scrollbar-hide flex-1">
+            {messages.map((message, i) => (
+                <ChatBubble key = {i} message={message} currentUser="Saimss" />
             ))}
+            <div ref={bottomRef} />
         </div>
     )
 }
