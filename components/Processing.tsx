@@ -11,13 +11,22 @@ export interface Messages{
    
 }
 
-function decodeContent(str: string): string {
-    try {
-        return decodeURIComponent(str);
-    } catch {
-        return str;
-    }
+
+   function decodeContent(str: string): string {
+  try {
+    const encoded = [...str].map(c => {
+      const code = c.charCodeAt(0);
+      if (code >= 0x80 && code <= 0xFF) {
+        return '%' + code.toString(16).toUpperCase().padStart(2, '0');
+      }
+      return c;
+    }).join('');
+    return decodeURIComponent(encoded);
+  } catch {
+    return str;
+  }
 }
+
 
 export function extractParticipants(raw: ChatData): Participants[]{
     return raw.participants.map((item) => {
@@ -34,7 +43,7 @@ export function extractMessages(raw: ChatData): Messages[]{
         return{
             sender: String(msg.sender_name ?? 'unknown'),
             content: decodeContent(String(msg.content ?? '')),
-            timestamp: Number(msg.timestamp?? 0)
+            timestamp: Number(msg.timestamp_ms ?? 0)
 
         }
     }).reverse()
